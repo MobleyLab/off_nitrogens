@@ -1,0 +1,205 @@
+Data for file: plan2pyr-222.sdf
+
+>>> Molecule: N1	NumConfs: 1
+
+N1: sum of angles for N, index 2: 332.704242
+N1: wiberg bond order for indices 2 0: 1.001377820968628
+N1: wiberg bond order for indices 2 1: 1.000429391860962
+N1: wiberg bond order for indices 2 9: 0.9401018619537354
+N1: sum of bond orders for N, index 2: 2.941909
+
+>>> Molecule: N2	NumConfs: 1
+
+N2: sum of angles for N, index 3: 359.994874
+N2: wiberg bond order for indices 3 0: 1.0929062366485596
+N2: wiberg bond order for indices 3 2: 0.9573213458061218
+N2: wiberg bond order for indices 3 11: 0.9007548689842224
+N2: sum of bond orders for N, index 3: 2.950982
+
+>>> Molecule: N3	NumConfs: 2
+
+N3: sum of angles for N, index 3: 359.985150
+N3: wiberg bond order for indices 3 0: 1.0976369380950928
+N3: wiberg bond order for indices 3 1: 0.9537681937217712
+N3: wiberg bond order for indices 3 12: 0.889290988445282
+N3: sum of bond orders for N, index 3: 2.940696
+
+N3: sum of angles for N, index 3: 358.993838
+N3: wiberg bond order for indices 3 0: 1.0976369380950928
+N3: wiberg bond order for indices 3 1: 0.9537681937217712
+N3: wiberg bond order for indices 3 12: 0.889290988445282
+N3: sum of bond orders for N, index 3: 2.940696
+
+>>> Molecule: N4	NumConfs: 1
+
+N4: sum of angles for N, index 3: 351.867974
+N4: wiberg bond order for indices 3 0: 1.0342168807983398
+N4: wiberg bond order for indices 3 1: 0.9647706151008606
+N4: wiberg bond order for indices 3 12: 0.9067134261131287
+N4: sum of bond orders for N, index 3: 2.905701
+
+N4: sum of angles for N, index 4: 351.868474
+N4: wiberg bond order for indices 4 0: 1.0299208164215088
+N4: wiberg bond order for indices 4 2: 0.9664855599403381
+N4: wiberg bond order for indices 4 13: 0.9070916771888733
+N4: sum of bond orders for N, index 4: 2.903498
+
+>>> Molecule: N5	NumConfs: 4
+
+N5: sum of angles for N, index 2: 351.037624
+N5: wiberg bond order for indices 2 0: 0.9622541666030884
+N5: wiberg bond order for indices 2 5: 0.644170343875885
+N5: wiberg bond order for indices 2 12: 0.9007731080055237
+N5: sum of bond orders for N, index 2: 2.507198
+
+N5: sum of angles for N, index 2: 351.036955
+N5: wiberg bond order for indices 2 0: 0.9622541666030884
+N5: wiberg bond order for indices 2 5: 0.644170343875885
+N5: wiberg bond order for indices 2 12: 0.9007731080055237
+N5: sum of bond orders for N, index 2: 2.507198
+
+N5: sum of angles for N, index 2: 343.409650
+N5: wiberg bond order for indices 2 0: 0.9622541666030884
+N5: wiberg bond order for indices 2 5: 0.644170343875885
+N5: wiberg bond order for indices 2 12: 0.9007731080055237
+N5: sum of bond orders for N, index 2: 2.507198
+
+N5: sum of angles for N, index 2: 343.314856
+N5: wiberg bond order for indices 2 0: 0.9622541666030884
+N5: wiberg bond order for indices 2 5: 0.644170343875885
+N5: wiberg bond order for indices 2 12: 0.9007731080055237
+N5: sum of bond orders for N, index 2: 2.507198
+
+>>> Molecule: N6	NumConfs: 6
+
+N6: sum of angles for N, index 7: 355.073079
+N6: wiberg bond order for indices 7 3: 1.0447776317596436
+N6: wiberg bond order for indices 7 10: 0.5928472280502319
+N6: wiberg bond order for indices 7 17: 0.8882083892822266
+N6: sum of bond orders for N, index 7: 2.525833
+
+N6: sum of angles for N, index 7: 356.858262
+N6: wiberg bond order for indices 7 3: 1.0447776317596436
+N6: wiberg bond order for indices 7 10: 0.5928472280502319
+N6: wiberg bond order for indices 7 17: 0.8882083892822266
+N6: sum of bond orders for N, index 7: 2.525833
+
+N6: sum of angles for N, index 7: 355.060813
+N6: wiberg bond order for indices 7 3: 1.0447776317596436
+N6: wiberg bond order for indices 7 10: 0.5928472280502319
+N6: wiberg bond order for indices 7 17: 0.8882083892822266
+N6: sum of bond orders for N, index 7: 2.525833
+
+N6: sum of angles for N, index 7: 356.859966
+N6: wiberg bond order for indices 7 3: 1.0447776317596436
+N6: wiberg bond order for indices 7 10: 0.5928472280502319
+N6: wiberg bond order for indices 7 17: 0.8882083892822266
+N6: sum of bond orders for N, index 7: 2.525833
+
+N6: sum of angles for N, index 7: 349.900718
+N6: wiberg bond order for indices 7 3: 1.0447776317596436
+N6: wiberg bond order for indices 7 10: 0.5928472280502319
+N6: wiberg bond order for indices 7 17: 0.8882083892822266
+N6: sum of bond orders for N, index 7: 2.525833
+
+N6: sum of angles for N, index 7: 349.896328
+N6: wiberg bond order for indices 7 3: 1.0447776317596436
+N6: wiberg bond order for indices 7 10: 0.5928472280502319
+N6: wiberg bond order for indices 7 17: 0.8882083892822266
+N6: sum of bond orders for N, index 7: 2.525833
+
+>>> Molecule: N7	NumConfs: 3
+
+N7: sum of angles for N, index 7: 350.331924
+N7: wiberg bond order for indices 7 5: 1.0009170770645142
+N7: wiberg bond order for indices 7 10: 0.6194610595703125
+N7: wiberg bond order for indices 7 19: 0.8932752013206482
+N7: sum of bond orders for N, index 7: 2.513653
+
+N7: sum of angles for N, index 7: 350.332370
+N7: wiberg bond order for indices 7 5: 1.0009170770645142
+N7: wiberg bond order for indices 7 10: 0.6194610595703125
+N7: wiberg bond order for indices 7 19: 0.8932752013206482
+N7: sum of bond orders for N, index 7: 2.513653
+
+N7: sum of angles for N, index 7: 342.410701
+N7: wiberg bond order for indices 7 5: 1.0009170770645142
+N7: wiberg bond order for indices 7 10: 0.6194610595703125
+N7: wiberg bond order for indices 7 19: 0.8932752013206482
+N7: sum of bond orders for N, index 7: 2.513653
+
+>>> Molecule: N8	NumConfs: 2
+
+N8: sum of angles for N, index 7: 331.633475
+N8: wiberg bond order for indices 7 4: 0.9881227016448975
+N8: wiberg bond order for indices 7 6: 0.9995244145393372
+N8: wiberg bond order for indices 7 16: 0.9481127262115479
+N8: sum of bond orders for N, index 7: 2.935760
+
+N8: sum of angles for N, index 7: 331.630152
+N8: wiberg bond order for indices 7 4: 0.9881227016448975
+N8: wiberg bond order for indices 7 6: 0.9995244145393372
+N8: wiberg bond order for indices 7 16: 0.9481127262115479
+N8: sum of bond orders for N, index 7: 2.935760
+
+>>> Molecule: N9	NumConfs: 2
+
+N9: sum of angles for N, index 7: 338.648585
+N9: wiberg bond order for indices 7 4: 1.0662182569503784
+N9: wiberg bond order for indices 7 16: 0.9380321502685547
+N9: wiberg bond order for indices 7 17: 0.9383895397186279
+N9: sum of bond orders for N, index 7: 2.942640
+
+N9: sum of angles for N, index 8: 347.065161
+N9: wiberg bond order for indices 8 5: 1.0479073524475098
+N9: wiberg bond order for indices 8 6: 0.9841524958610535
+N9: wiberg bond order for indices 8 18: 0.9213301539421082
+N9: sum of bond orders for N, index 8: 2.953390
+
+N9: sum of angles for N, index 7: 338.514454
+N9: wiberg bond order for indices 7 4: 1.0662182569503784
+N9: wiberg bond order for indices 7 16: 0.9380321502685547
+N9: wiberg bond order for indices 7 17: 0.9383895397186279
+N9: sum of bond orders for N, index 7: 2.942640
+
+N9: sum of angles for N, index 8: 346.858979
+N9: wiberg bond order for indices 8 5: 1.0479073524475098
+N9: wiberg bond order for indices 8 6: 0.9841524958610535
+N9: wiberg bond order for indices 8 18: 0.9213301539421082
+N9: sum of bond orders for N, index 8: 2.953390
+
+>>> Molecule: N10	NumConfs: 1
+
+N10: sum of angles for N, index 7: 351.117634
+N10: wiberg bond order for indices 7 5: 1.064304232597351
+N10: wiberg bond order for indices 7 6: 0.9800997376441956
+N10: wiberg bond order for indices 7 16: 0.9170466065406799
+N10: sum of bond orders for N, index 7: 2.961451
+
+>>> Molecule: N11	NumConfs: 3
+
+N11: sum of angles for N, index 7: 359.999942
+N11: wiberg bond order for indices 7 3: 1.1495857238769531
+N11: wiberg bond order for indices 7 4: 0.9550349116325378
+N11: wiberg bond order for indices 7 14: 0.8980103731155396
+N11: sum of bond orders for N, index 7: 3.002631
+
+N11: sum of angles for N, index 7: 358.624042
+N11: wiberg bond order for indices 7 3: 1.1495857238769531
+N11: wiberg bond order for indices 7 4: 0.9550349116325378
+N11: wiberg bond order for indices 7 14: 0.8980103731155396
+N11: sum of bond orders for N, index 7: 3.002631
+
+N11: sum of angles for N, index 7: 359.996513
+N11: wiberg bond order for indices 7 3: 1.1495857238769531
+N11: wiberg bond order for indices 7 4: 0.9550349116325378
+N11: wiberg bond order for indices 7 14: 0.8980103731155396
+N11: sum of bond orders for N, index 7: 3.002631
+
+>>> Molecule: N12	NumConfs: 1
+
+N12: sum of angles for N, index 7: 355.643110
+N12: wiberg bond order for indices 7 4: 1.095402717590332
+N12: wiberg bond order for indices 7 5: 0.9722543358802795
+N12: wiberg bond order for indices 7 15: 0.9081316590309143
+N12: sum of bond orders for N, index 7: 2.975789
