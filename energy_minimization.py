@@ -1,5 +1,9 @@
 from openforcefield.typing.engines.smirnoff import *
 from openforcefield.utils import get_data_filename, extractPositionsFromOEMol, generateTopologyFromOEMol
+from openeye.oechem import *
+import oenotebook as oenb
+from openeye.oeomega import * # conformer generation
+from openeye.oequacpac import * #for partial charge assignment
 
 
 
@@ -65,7 +69,7 @@ def energyminimization(oemol, nsteps, outprefix='molecule'):
     
     
     
-    # Write out a PDB
+    # Write out a PDB for energy minimization
     from oeommtools.utils import openmmTop_to_oemol
     outmol = openmmTop_to_oemol( topology, state.getPositions())
     ofile = oemolostream( outprefix+'.pdb')
@@ -79,18 +83,9 @@ def energyminimization(oemol, nsteps, outprefix='molecule'):
 
 
 
-
-
-
-
-# Import stuff
-from openeye.oechem import *
-import oenotebook as oenb
-from openeye.oeomega import * # conformer generation
-from openeye.oequacpac import * #for partial charge assignment
-
-
 def input_energy_minimization(smiles, name):
+	""" Takes smiles string and makes oemol, and performs energy minization on the molecule
+	"""
 	mol = OEMol()
 	OESmilesToMol(mol, smiles)
 	omega = OEOmega()
