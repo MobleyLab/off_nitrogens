@@ -31,11 +31,10 @@ install:
   - conda info -a
     # creates environment for the given python version
   - conda create -q -n test python=$TRAVIS_PYTHON_VERSION numpy pytest 
-  - source activate test 
+  - source activate test
+  - conda install -c openeye openeye-toolkits
 
     # Install anything not in conda
-  - pip install codecov
-  - pip install pytest-cov
   - conda list
 
 before_script:
@@ -45,11 +44,8 @@ before_script:
 
 script:
   # Make sure the --cov variable is the name of the current package
-  - py.test -v -s --cov
+  - py.test -v -s
 
 notifications:
   email: false
-
-after_success:
-  - codecov
 
