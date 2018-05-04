@@ -92,7 +92,6 @@ def test_oemol_nhfcl():
     # set provided coordinates
     mol.SetCoords(oechem.OEFloatArray(coordlist))
     # calculate and check improper angle
-    #ang = calc_improper_angle(find_improper_angles(mol)[0][0], find_improper_angles(mol)[0][1], find_improper_angles(mol)[0][2], find_improper_angles(mol)[0][3])
     crds, names = find_improper_angles(mol)
     ang = calc_improper_angle(crds[0][0], crds[0][1], crds[0][2], crds[0][3])
     if abs(ang-15.0) > 0.1:

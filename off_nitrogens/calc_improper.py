@@ -56,6 +56,28 @@ def angle_between(v1, v2):
     v2_u = v2/np.linalg.norm(v2)
     return np.degrees(np.arccos(np.clip(np.dot(v1_u, v2_u), -1.0, 1.0)))
 
+def calc_valence_angle(atom0, atom1, atom2):
+    """
+    Calculate the valence angle of three atoms.
+
+    Parameters
+    ----------
+    atom0 : numpy array
+        CENTRAL atom coordinates
+    atom1 : numpy array
+        outer atom coordinates
+    atom2 : numpy array
+        outer atom coordinates
+
+    Returns
+    -------
+    float
+        Angle in degrees.
+    """
+    v1 = atom1-atom0
+    v2 = atom2-atom0
+    return(angle_between(v1, v2))
+
 def calc_improper_angle(atom0, atom1, atom2, atom3, translate=False):
     """
     Calculate the improper dihedral angle of a set of given four atoms.
