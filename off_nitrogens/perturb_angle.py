@@ -25,7 +25,6 @@ import numpy as np
 import math
 import sys
 
-sys.path.insert(0, '/beegfs/DATA/mobley/limvt/openforcefield/plan2pyr/off_nitrogens/off_nitrogens')
 from calc_improper import *
 
 #=============================================================================================
@@ -128,7 +127,7 @@ def perturb_valence(atom0, atom1, atom2, atom3, theta, verbose=False):
 
     return atom0, atom1, atom2, atom3_rot
 
-def oemol_perturb_valence(mol, central_atom, theta):
+def oemol_perturb_valence(mol, central_atom, outer_atom, theta):
     """
     From an OpenEye OEMol, specify the improper angle and the specific atom of
     that improper that should be perturbed. The improper angles are obtained
@@ -141,22 +140,43 @@ def oemol_perturb_valence(mol, central_atom, theta):
     central_atom : string
         atom name in the mol which is central to the improper of interest
         Ex., "N1"
+    outer_atom : string
+        atom name in the mol which is to be rotated
+        Ex., "N1"
     theta : float
         how many degrees by which to rotate
 
     [TODO]
 
     """
-    # todo
+    # todo [1]
+    # calc_improper.py: change find_improper_angles to return the name of the central atom as 5th element in crdlist
+    #  - under aidx, aname = atom.GetName()
+    #  - crdlist.append((crd0, crd1, crd2, crd3, aname))
+    #  - update returns section in docstring
+
+    # call find_improper_angle function to get coordinates for specific dihedral
+    # todo [2]
+
+    # call perturb_valence on the coordinates
+    # todo [3]
+
+
     return # placeholder
 
-    return
+# todo [4]
+# write a new function to set the new coordinates back to the OEMol
+# 1. use the name outer_atom to get the OEAtom (atom_moved)
+# 2. atom_moved.SetCoords(_the-last-atom-in-the-perturb-valence-fx__)
+# (mol, moved_atom, new_coords)
 
 def perturb_improper(atom0, atom1, atom2, atom3, theta, verbose=False):
     """
-    [TODO]
+    [TODO] [6]
 
     """
-    # todo
+    # todo [5]
     return # placeholder
+
+# todo [7] write a test for your function
 

@@ -3,6 +3,7 @@ from off_nitrogens.perturb_angle import *
 import numpy as np
 
 def test_move_valence():
+    """Test a (changed valence, same improper) move on simple coordinates."""
     # atom0 is central, atom3 is being moved
     atom0 = np.asarray([0,0,0])
     atom1 = np.asarray([0,1,-1])
