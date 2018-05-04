@@ -166,7 +166,9 @@ def oemol_perturb_valence(mol, central_atom, outer_atom, theta):
     # call perturb_valence on those coordinates
     # todo [3]
 
-
+    # from the MATRIX returned by perturb_valence, update coordinates using your new function of todo [4]
+    # note: this means you probably won't need the COORDINATES returned by the perturb_valence function
+    # todo [5]
 
     return # placeholder
 
@@ -186,11 +188,11 @@ def oemol_perturb_valence(mol, central_atom, outer_atom, theta):
 
 def perturb_improper(atom0, atom1, atom2, atom3, theta, verbose=False):
     """
-    [TODO] [6]
+    [TODO] [7]
 
     """
-    # todo [5]
+    # todo [6]
     return # placeholder
 
-# todo [7] write a test for your function
+# todo [8] write a test for your function
 
