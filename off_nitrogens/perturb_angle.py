@@ -87,7 +87,11 @@ def perturb_valence(atom0, atom1, atom2, atom3, theta, verbose=False):
 
     Returns
     -------
-    the coordinates in the same order as given in parameters
+    atom* : numpy arrays
+        the coordinates in the same order as given in parameters
+    rot_mat : numpy array
+        three-dimension rotation matrix, returned so that the same
+        matrix can be applied to any atoms attached to atom3.
 
     """
 
@@ -125,7 +129,7 @@ def perturb_valence(atom0, atom1, atom2, atom3, theta, verbose=False):
         print("valence angle 3, after: ", calc_valence_angle(atom0, atom2, atom3_rot))
         print()
 
-    return atom0, atom1, atom2, atom3_rot
+    return atom0, atom1, atom2, atom3_rot, rot_mat
 
 def oemol_perturb_valence(mol, central_atom, outer_atom, theta):
     """
@@ -151,24 +155,34 @@ def oemol_perturb_valence(mol, central_atom, outer_atom, theta):
     """
     # todo [1]
     # calc_improper.py: change find_improper_angles to return the name of the central atom as 5th element in crdlist
-    #  - under aidx, aname = atom.GetName()
-    #  - crdlist.append((crd0, crd1, crd2, crd3, aname))
+    #  - under aidx, add something like: aname = atom.GetName()
+    #  - then update this line: crdlist.append((crd0, crd1, crd2, crd3, aname))
     #  - update returns section in docstring
+    #  - make sure tests are still passing
 
-    # call find_improper_angle function to get coordinates for specific dihedral
+    # call find_improper_angle function to get coordinates for some specified improper angle
     # todo [2]
 
-    # call perturb_valence on the coordinates
+    # call perturb_valence on those coordinates
     # todo [3]
+
 
 
     return # placeholder
 
 # todo [4]
 # write a new function to set the new coordinates back to the OEMol
-# 1. use the name outer_atom to get the OEAtom (atom_moved)
-# 2. atom_moved.SetCoords(_the-last-atom-in-the-perturb-valence-fx__)
-# (mol, moved_atom, new_coords)
+# def update_oemol_coordinates(mol, moved_atom, move_matrix)
+#   1. use the name moved_atom to get the OEAtom (atom_moved)
+#   2. loop over all atoms connected to moved_atom
+#   3. apply the move_matrix on those coordinates: something like
+#
+#       for connected_atom in ___:
+#           old_coords = connected_atom.GetCoords()
+#           connected_atom.SetCoords(np.dot(move_matrix, old_coords))
+#
+#      check the syntax though, I'm just writing pseudo-code
+#
 
 def perturb_improper(atom0, atom1, atom2, atom3, theta, verbose=False):
     """
