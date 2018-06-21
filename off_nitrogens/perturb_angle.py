@@ -27,8 +27,8 @@ import sys
 from openeye import oeomega
 from oeommtools.utils import openmmTop_to_oemol
 from openeye import oechem
-#from calc_improper import *
-from off_nitrogens.calc_improper import *
+from calc_improper import *
+#from off_nitrogens.calc_improper import *
 
 
 #=============================================================================================
@@ -102,15 +102,15 @@ def perturb_valence(atom0, atom1, atom2, atom3, theta, verbose=False):
         three-dimension rotation matrix, returned so that the same
         matrix can be applied to any atoms attached to atom3.
     """
-    
+
     print("These are the 3 atom coordinates for our molecule being input into perturb valence")
     print(atom0)
     print(atom1)
     print(atom2)
     print(atom3)
     # outer atoms are atom1 atom2 atom3. get normal vector to that plane.
-    v1 = atom2-atom1
-    v2 = atom2 - atom3
+    v1 = np.asarray(atom2)-np.asarray(atom1)
+    v2 = np.asarray(atom2) - np.asarray(atom3)
     print("this is v1:"+ str(v1))
     print("this is v2:"+ str(v2))
     print("previous 2 vectors will be dotted with one another")
@@ -124,7 +124,7 @@ def perturb_valence(atom0, atom1, atom2, atom3, theta, verbose=False):
     atom3_rot = np.dot(rot_mat, atom3)
     new_length = np.linalg.norm(atom0-atom3_rot)
     print("final length of bond: " + str(new_length))
-  
+
     # print details of geometry
     if verbose:
         print("\n>>> Perturbing valence while maintaining improper angle...")
@@ -217,7 +217,7 @@ def oemol_perturb(mol, central_atom, outer_atom, angle_type,  theta):
 
     print("is this the right move coord?" + str(move_coord))
 
-    atom0, atom1, atom2, atom3_rot, rot_mat = angle_type(center_coord, other_coords[0], other_coords[1], move_coord, theta)
+    atom0, atom1, atom2, atom3_rot = angle_type(center_coord, other_coords[0], other_coords[1], move_coord, theta)
     cmol.SetCoords(move_atom, oechem.OEFloatArray(atom3_rot))
 
     # Create an output file for visualization: .pdb file
@@ -296,23 +296,24 @@ def perturb_improper(atom0, atom1, atom2, atom3, theta, verbose=False):
 
 
 # todo [8] write a test for your function
+"""
 mol = oechem.OEMol()
 oechem.OESmilesToMol(mol, 'FNCl')
 oechem.OEAddExplicitHydrogens(mol)
 omega = oeomega.OEOmega()
 omega.SetMaxConfs(1)
 omega(mol)
-print('fining improper...')
+print('finding improper...')
 a= find_improper_angles(mol)
 print('a', a)
-
+"""
 
 #test nitrogen molecule
-molecules = {1:'CNC', 2:'CNC(=O)C', 3:'CNC(=O)OC', 4:'CNC(=O)NC', 5:'CNS(=O)(=O)C', 6:'CS(=O)(=O)Nc1ncncc1', 7:'CS(=O)(=O)Nc1ccccc1', 8:'CNc1ccc([O-])cc1', 9:'CNc1ccc(N)cc1', 10:'CNc1ccccc1', 11:'CNc1ncncc1', 12:'CNc1ccncc1'}
+#molecules = {1:'CNC', 2:'CNC(=O)C', 3:'CNC(=O)OC', 4:'CNC(=O)NC', 5:'CNS(=O)(=O)C', 6:'CS(=O)(=O)Nc1ncncc1', 7:'CS(=O)(=O)Nc1ccccc1', 8:'CNc1ccc([O-])cc1', 9:'CNc1ccc(N)cc1', 10:'CNc1ccccc1', 11:'CNc1ncncc1', 12:'CNc1ccncc1'}
 
-part = {4:'CNC(=O)NC', 6:'CS(=O)(=O)Nc1ncncc1', 9:'CNc1ccc(N)cc1', 10:'CNc1ccccc1', 12:'CNc1ccncc1'}
+#part = {4:'CNC(=O)NC', 6:'CS(=O)(=O)Nc1ncncc1', 9:'CNc1ccc(N)cc1', 10:'CNc1ccccc1', 12:'CNc1ccncc1'}
 
-pla = {2:'CNC(=O)C', 3:'CNC(=O)OC', 11:'CNc1ncncc1'}
+#pla = {2:'CNC(=O)C', 3:'CNC(=O)OC', 11:'CNc1ncncc1'}
 
 
 #test with a single molecule with various angle changes
@@ -322,12 +323,12 @@ oechem.OEAddExplicitHydrogens(tmol)
 omega = oeomega.OEOmega()
 omega.SetMaxConfs(1)
 omega(tmol)
-print('fining improper...')
-b= find_improper_angles(tmol)
-print('b', b)
-oemol_perturb(tmol, a[1][0][0], a[1][0][1], True,  60)
-oemol_perturb(tmol, a[1][0][0], a[1][0][1], True,  40)
-oemol_perturb(tmol, a[1][0][0], a[1][0][1], True, 80)
+print('finding improper...')
+a= find_improper_angles(tmol)
+print('a', a)
+#oemol_perturb(tmol, a[1][0][0], a[1][0][1], True,  60)
+#oemol_perturb(tmol, a[1][0][0], a[1][0][1], True,  40)
+#oemol_perturb(tmol, a[1][0][0], a[1][0][1], True, 80)
 #oemol_perturb(tmol, a[1][0][0], a[1][0][1], True, 160)
 
 oemol_perturb(tmol, a[1][0][0], a[1][0][1], False,  60)

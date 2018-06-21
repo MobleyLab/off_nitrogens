@@ -164,7 +164,7 @@ def find_improper_angles(mol):
         crd3 = np.asarray(mol_coords[nbors[2].GetIdx()])
         # store coordinates
         crdlist.append([crd0, crd1, crd2, crd3])
-        namelist.append([atom.GetName(), nbors[0].GetName(), nbors[1].GetName(),nbors[2].GetName()])
+        namelist.append([atom.GetIdx(), nbors[0].GetIdx(), nbors[1].GetIdx(),nbors[2].GetIdx()])
         #print(atom.GetName(),nbors[0].GetName(),nbors[1].GetName(),nbors[2].GetName())
 
     return crdlist, namelist
