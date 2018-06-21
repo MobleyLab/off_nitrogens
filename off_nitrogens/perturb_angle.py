@@ -25,7 +25,6 @@ import numpy as np
 import math
 import sys
 from openeye import oeomega
-from oeommtools.utils import openmmTop_to_oemol
 from openeye import oechem
 from calc_improper import *
 #from off_nitrogens.calc_improper import *
