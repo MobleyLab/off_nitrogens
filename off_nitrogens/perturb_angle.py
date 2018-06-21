@@ -25,7 +25,8 @@ import numpy as np
 import math
 import sys
 
-from calc_improper import *
+#from calc_improper import *
+from off_nitrogens.calc_improper import *
 
 #=============================================================================================
 # PRIVATE SUBROUTINES
