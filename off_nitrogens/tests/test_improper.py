@@ -1,4 +1,5 @@
-from off_nitrogens.calc_improper import *
+#from off_nitrogens.calc_improper import *
+from calc_improper import *
 import numpy as np
 
 def test_two_vectors():
@@ -91,10 +92,10 @@ def test_oemol_nhfcl():
     # set provided coordinates
     mol.SetCoords(oechem.OEFloatArray(coordlist))
     # calculate and check improper angle
-    atom0, atom1, atom2, atom3 = find_improper_angles(mol)[0]
-    ang = calc_improper_angle(atom0, atom1, atom2, atom3)
+    crds, names = find_improper_angles(mol)
+    ang = calc_improper_angle(crds[0][0], crds[0][1], crds[0][2], crds[0][3])
     if abs(ang-15.0) > 0.1:
         raise Exception("Error calculating improper of test OEMol. Calculated {} degrees, but should be 15 degrees.".format(ang))
 
 
-
+test_oemol_nhfcl()
