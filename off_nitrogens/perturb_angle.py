@@ -130,7 +130,7 @@ def perturb_valence(atom0, atom1, atom2, atom3, theta, verbose=False):
         print("valence angle 3, after: ", calc_valence_angle(atom0, atom2, atom3_rot))
         print()
 
-    return atom0, atom1, atom2, atom3_rot, rot_mat
+    return atom0, atom1, atom2, atom3_rot
 
 def oemol_perturb_valence(mol, central_atom, outer_atom, theta):
     """
