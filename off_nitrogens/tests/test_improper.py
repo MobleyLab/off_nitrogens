@@ -81,6 +81,11 @@ def test_oemol_nhfcl():
     # create OEMol
     mol = oechem.OEMol()
     oechem.OESmilesToMol(mol, 'FNCl')
+    omega = oeomega.OEOmega()
+    omega.SetMaxConfs(1)
+    omega.SetIncludeInput(False)
+    omega.SetStrictStereo(False)
+    status = omega(mol)
     oechem.OETriposAtomTypes(mol)
     oechem.OETriposAtomNames(mol)
     oechem.OEAddExplicitHydrogens(mol)
@@ -91,5 +96,4 @@ def test_oemol_nhfcl():
     ang = calc_improper_angle(crds[0][0], crds[0][1], crds[0][2], crds[0][3])
     if abs(ang-15.0) > 0.1 and abs(ang-165.0) > 0.1:
         raise Exception("Error calculating improper of test OEMol. Calculated {} degrees, but should be 15 or 165 degrees.".format(ang))
-
 
