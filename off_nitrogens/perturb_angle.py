@@ -27,8 +27,9 @@ import sys
 from openeye import oeomega
 from oeommtools.utils import openmmTop_to_oemol
 from openeye import oechem
+#from calc_improper import *
+from off_nitrogens.calc_improper import *
 
-from calc_improper import *
 
 #=============================================================================================
 # PRIVATE SUBROUTINES
@@ -61,6 +62,8 @@ def rotation_matrix(axis, theta):
     print("this is theta:" + str(theta))
     print("are these valid to divide?^")
     print("axis is divided by the dot product of the square root of axis, and axis")
+
+
     axis = axis/math.sqrt(np.dot(axis, axis))
     a = math.cos(theta/2.0)
     b, c, d = -axis*math.sin(theta/2.0)
@@ -98,9 +101,8 @@ def perturb_valence(atom0, atom1, atom2, atom3, theta, verbose=False):
     rot_mat : numpy array
         three-dimension rotation matrix, returned so that the same
         matrix can be applied to any atoms attached to atom3.
-
-
     """
+    
     print("These are the 3 atom coordinates for our molecule being input into perturb valence")
     print(atom0)
     print(atom1)
@@ -122,6 +124,7 @@ def perturb_valence(atom0, atom1, atom2, atom3, theta, verbose=False):
     atom3_rot = np.dot(rot_mat, atom3)
     new_length = np.linalg.norm(atom0-atom3_rot)
     print("final length of bond: " + str(new_length))
+  
     # print details of geometry
     if verbose:
         print("\n>>> Perturbing valence while maintaining improper angle...")
@@ -149,7 +152,8 @@ def perturb_valence(atom0, atom1, atom2, atom3, theta, verbose=False):
         print("valence angle 3, after: ", calc_valence_angle(atom0, atom2, atom3_rot))
         print()
 
-    return atom0, atom1, atom2, atom3_rot, rot_mat
+
+    return atom0, atom1, atom2, atom3_rot
 
 def oemol_perturb(mol, central_atom, outer_atom, angle_type,  theta):
     """
@@ -359,5 +363,4 @@ oemol_perturb(mol, a[1][0][0], a[1][0][1], False,  160)
 
 
 """
-
 
