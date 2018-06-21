@@ -81,14 +81,9 @@ def test_oemol_nhfcl():
     # create OEMol
     mol = oechem.OEMol()
     oechem.OESmilesToMol(mol, 'FNCl')
-    omega = oeomega.OEOmega()
-    omega.SetIncludeInput(False)
-    omega.SetStrictStereo(False)
-    status = omega(mol)
     oechem.OETriposAtomTypes(mol)
     oechem.OETriposAtomNames(mol)
     oechem.OEAddExplicitHydrogens(mol)
-    omega.SetMaxConfs(1)
     # set provided coordinates
     mol.SetCoords(oechem.OEFloatArray(coordlist))
     # calculate and check improper angle
