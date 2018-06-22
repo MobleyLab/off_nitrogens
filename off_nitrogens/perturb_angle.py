@@ -107,6 +107,11 @@ def perturb_valence(atom0, atom1, atom2, atom3, theta, verbose=False):
     print(atom1)
     print(atom2)
     print(atom3)
+
+    # keep old central atom, and translate angle to put central atom at origin
+    oldatom0 = atom0
+    atom0, atom1, atom2, atom3 = translate(atom0, atom1, atom2, atom3)
+
     # outer atoms are atom1 atom2 atom3. get normal vector to that plane.
     v1 = np.asarray(atom2)-np.asarray(atom1)
     v2 = np.asarray(atom2) - np.asarray(atom3)
@@ -115,12 +120,16 @@ def perturb_valence(atom0, atom1, atom2, atom3, theta, verbose=False):
     print("previous 2 vectors will be dotted with one another")
     w2 = np.cross(v1, v2)
     print("this is the result after corssing v1 and v2 (valence perturbtion)" + str(w2))
+
     # calculate rotation matrix
     rot_mat = rotation_matrix(w2, theta)
     length = np.linalg.norm(atom0-atom3)
     print("initial length of bond: " + str(length))
     print("this is a rotation matrix: " + str(rot_mat))
     atom3_rot = np.dot(rot_mat, atom3)
+
+    # translate the molecule back
+    atom0, atom1, atom2, atom3_rot = translate(atom0, atom1, atom2, atom3_rot, False, oldatom0)
     new_length = np.linalg.norm(atom0-atom3_rot)
     print("final length of bond: " + str(new_length))
 
