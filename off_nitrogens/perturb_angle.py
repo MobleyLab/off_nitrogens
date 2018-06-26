@@ -11,7 +11,7 @@ Perturb geometry around an improper dihedral angle. The options are:
  1. Change valence angle without changing improper
  2. Change improper angle without changing valence angles
 
-For use in generating geometries to parameterize valence and improper angles
+For use in generating geometries to parameterize valence and improper angles for an oemol
 
 By: Victoria Lim and Jessica Maat
 
@@ -33,6 +33,8 @@ from calc_improper import *
 #=============================================================================================
 # PRIVATE SUBROUTINES
 #=============================================================================================
+
+
 
 def rotation_matrix(axis, theta):
     """
@@ -71,6 +73,10 @@ def rotation_matrix(axis, theta):
     return np.array([[aa+bb-cc-dd, 2*(bc+ad), 2*(bd-ac)],
                      [2*(bc-ad), aa+cc-bb-dd, 2*(cd+ab)],
                      [2*(bd+ac), 2*(cd-ab), aa+dd-bb-cc]])
+
+
+
+
 
 def perturb_valence(atom0, atom1, atom2, atom3, theta, verbose=False):
     """
@@ -154,6 +160,76 @@ def perturb_valence(atom0, atom1, atom2, atom3, theta, verbose=False):
 
     return atom0, atom1, atom2, atom3_rot
 
+
+
+
+
+
+def perturb_improper(atom0, atom1, atom2, atom3, theta, verbose=False):
+    """
+    Rotate atom3 out of the plane of atom1, atom2  by theta degrees while keeping valence angle the same.
+
+    Parameters
+    ----------
+    atom0 : numpy array
+        CENTRAL atom coordinates
+    atom1 : numpy array
+        outer atom coordinates
+    atom2 : numpy array
+        outer atom coordinates
+    atom3 : numpy array
+        outer atom coordinates TO BE MOVED
+    theta : float
+        how many degrees by which to move atom upwards
+
+    Returns
+    -------
+    atom* : numpy arrays
+        the coordinates in the same order as given in parameters
+    rot_mat : numpy array
+        three-dimension rotation matrix, returned so that the same
+        matrix can be applied to any atoms attached to atom3.
+
+    """
+
+    # get the vector between atom2 and atom1 and then rotate atom3 about that plane by angle theta.
+    v1 = atom2-atom1
+    # calculate rotation matrix
+    rot_mat = rotation_matrix(v1, theta)
+    atom3_rot = np.dot(rot_mat, atom3)
+    # print details of geometry
+    if verbose:
+        print("\n>>> Perturbing valence while maintaining improper angle...")
+        # atom being moved is atom3.
+        print("\natom0 original coords:\t",atom0)
+        print("atom1 original coords:\t",atom1)
+        print("atom2 original coords:\t",atom2)
+        print("atom3 original coords:\t",atom3)
+        print("atom3 {:.2f} deg rotated: {}".format(60.,atom3_rot))
+
+        # check improper but make sure the central is first and moved is last
+        print("\nImproper angle, before: ", calc_improper_angle(atom0, atom1, atom2, atom3))
+        print("Improper angle, before: ", calc_improper_angle(atom0, atom2, atom3, atom1))
+        print("Improper angle, before: ", calc_improper_angle(atom0, atom3, atom1, atom2))
+        print("Improper angle, after: ", calc_improper_angle(atom0, atom1, atom2, atom3_rot))
+        print("Improper angle, after: ", calc_improper_angle(atom0, atom2, atom3_rot, atom1))
+        print("Improper angle, after: ", calc_improper_angle(atom0, atom3_rot, atom1, atom2))
+
+        ## check valences
+        print("\nvalence angle 1, before: ", calc_valence_angle(atom0, atom1, atom2))
+        print("valence angle 2, before: ", calc_valence_angle(atom0, atom1, atom3))
+        print("valence angle 3, before: ", calc_valence_angle(atom0, atom2, atom3))
+        print("valence angle 1, after: ", calc_valence_angle(atom0, atom1, atom2))
+        print("valence angle 2, after: ", calc_valence_angle(atom0, atom1, atom3_rot))
+        print("valence angle 3, after: ", calc_valence_angle(atom0, atom2, atom3_rot))
+        print()
+
+    return atom0, atom1, atom2, atom3_rot
+
+
+
+
+
 def oemol_perturb(mol, central_atom, outer_atom, angle_type,  theta):
     """
     From an OpenEye OEMol, specify the improper angle and the specific atom of
@@ -227,140 +303,4 @@ def oemol_perturb(mol, central_atom, outer_atom, angle_type,  theta):
     ofile.close()
 
     return cmol
-
-
-
-
-def perturb_improper(atom0, atom1, atom2, atom3, theta, verbose=False):
-    """
-    Rotate atom3 out of the plane of atom1, atom2  by theta degrees while keeping valence angle the same.
-
-    Parameters
-    ----------
-    atom0 : numpy array
-        CENTRAL atom coordinates
-    atom1 : numpy array
-        outer atom coordinates
-    atom2 : numpy array
-        outer atom coordinates
-    atom3 : numpy array
-        outer atom coordinates TO BE MOVED
-    theta : float
-        how many degrees by which to move atom upwards
-
-    Returns
-    -------
-    atom* : numpy arrays
-        the coordinates in the same order as given in parameters
-    rot_mat : numpy array
-        three-dimension rotation matrix, returned so that the same
-        matrix can be applied to any atoms attached to atom3.
-
-    """
-
-    # get the vector between atom2 and atom1 and then rotate atom3 about that plane by angle theta.
-    v1 = atom2-atom1
-    # calculate rotation matrix
-    rot_mat = rotation_matrix(v1, theta)
-    atom3_rot = np.dot(rot_mat, atom3)
-    # print details of geometry
-    if verbose:
-        print("\n>>> Perturbing valence while maintaining improper angle...")
-        # atom being moved is atom3.
-        print("\natom0 original coords:\t",atom0)
-        print("atom1 original coords:\t",atom1)
-        print("atom2 original coords:\t",atom2)
-        print("atom3 original coords:\t",atom3)
-        print("atom3 {:.2f} deg rotated: {}".format(60.,atom3_rot))
-
-        # check improper but make sure the central is first and moved is last
-        print("\nImproper angle, before: ", calc_improper_angle(atom0, atom1, atom2, atom3))
-        print("Improper angle, before: ", calc_improper_angle(atom0, atom2, atom3, atom1))
-        print("Improper angle, before: ", calc_improper_angle(atom0, atom3, atom1, atom2))
-        print("Improper angle, after: ", calc_improper_angle(atom0, atom1, atom2, atom3_rot))
-        print("Improper angle, after: ", calc_improper_angle(atom0, atom2, atom3_rot, atom1))
-        print("Improper angle, after: ", calc_improper_angle(atom0, atom3_rot, atom1, atom2))
-
-        ## check valences
-        print("\nvalence angle 1, before: ", calc_valence_angle(atom0, atom1, atom2))
-        print("valence angle 2, before: ", calc_valence_angle(atom0, atom1, atom3))
-        print("valence angle 3, before: ", calc_valence_angle(atom0, atom2, atom3))
-        print("valence angle 1, after: ", calc_valence_angle(atom0, atom1, atom2))
-        print("valence angle 2, after: ", calc_valence_angle(atom0, atom1, atom3_rot))
-        print("valence angle 3, after: ", calc_valence_angle(atom0, atom2, atom3_rot))
-        print()
-
-    return atom0, atom1, atom2, atom3_rot, rot_mat
-
-
-
-# todo [8] write a test for your function
-"""
-mol = oechem.OEMol()
-oechem.OESmilesToMol(mol, 'FNCl')
-oechem.OEAddExplicitHydrogens(mol)
-omega = oeomega.OEOmega()
-omega.SetMaxConfs(1)
-omega(mol)
-print('finding improper...')
-a= find_improper_angles(mol)
-print('a', a)
-"""
-
-#test nitrogen molecule
-#molecules = {1:'CNC', 2:'CNC(=O)C', 3:'CNC(=O)OC', 4:'CNC(=O)NC', 5:'CNS(=O)(=O)C', 6:'CS(=O)(=O)Nc1ncncc1', 7:'CS(=O)(=O)Nc1ccccc1', 8:'CNc1ccc([O-])cc1', 9:'CNc1ccc(N)cc1', 10:'CNc1ccccc1', 11:'CNc1ncncc1', 12:'CNc1ccncc1'}
-
-#part = {4:'CNC(=O)NC', 6:'CS(=O)(=O)Nc1ncncc1', 9:'CNc1ccc(N)cc1', 10:'CNc1ccccc1', 12:'CNc1ccncc1'}
-
-#pla = {2:'CNC(=O)C', 3:'CNC(=O)OC', 11:'CNc1ncncc1'}
-
-
-#test with a single molecule with various angle changes
-tmol = oechem.OEMol()
-oechem.OESmilesToMol(tmol, 'CNc1ncncc1')
-oechem.OEAddExplicitHydrogens(tmol)
-omega = oeomega.OEOmega()
-omega.SetMaxConfs(1)
-omega(tmol)
-print('finding improper...')
-a= find_improper_angles(tmol)
-print('a', a)
-#oemol_perturb(tmol, a[1][0][0], a[1][0][1], True,  60)
-#oemol_perturb(tmol, a[1][0][0], a[1][0][1], True,  40)
-#oemol_perturb(tmol, a[1][0][0], a[1][0][1], True, 80)
-#oemol_perturb(tmol, a[1][0][0], a[1][0][1], True, 160)
-
-oemol_perturb(tmol, a[1][0][0], a[1][0][1], False,  60)
-#oemol_perturb(tmol, a[1][0][0], a[1][0][1], False,  40)
-#oemol_perturb(tmol, a[1][0][0], a[1][0][1], False, 80)
-#oemol_perturb(tmol, a[1][0][0], a[1][0][1], False, 160)
-
-
-
-"""
-
-# test the perturbations at different angles
-oemol_perturb(mol, a[1][0][0], a[1][0][1], True,  0)
-oemol_perturb(mol, a[1][0][0], a[1][0][1], True,  20)
-oemol_perturb(mol, a[1][0][0], a[1][0][1], True,  40)
-oemol_perturb(mol, a[1][0][0], a[1][0][1], True,  60)
-oemol_perturb(mol, a[1][0][0], a[1][0][1], True,  80)
-oemol_perturb(mol, a[1][0][0], a[1][0][1], True,  100)
-oemol_perturb(mol, a[1][0][0], a[1][0][1], True,  120)
-oemol_perturb(mol, a[1][0][0], a[1][0][1], True,  140)
-oemol_perturb(mol, a[1][0][0], a[1][0][1], True,  160)
-
-
-oemol_perturb(mol, a[1][0][0], a[1][0][1], False,  0)
-oemol_perturb(mol, a[1][0][0], a[1][0][1], False,  20)
-oemol_perturb(mol, a[1][0][0], a[1][0][1], False,  40)
-oemol_perturb(mol, a[1][0][0], a[1][0][1], False,  60)
-oemol_perturb(mol, a[1][0][0], a[1][0][1], False,  80)
-oemol_perturb(mol, a[1][0][0], a[1][0][1], False,  100)
-oemol_perturb(mol, a[1][0][0], a[1][0][1], False,  120)
-oemol_perturb(mol, a[1][0][0], a[1][0][1], False,  140)
-oemol_perturb(mol, a[1][0][0], a[1][0][1], False,  160)
-
-
-"""
 
