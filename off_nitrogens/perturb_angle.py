@@ -157,69 +157,125 @@ def perturb_improper(atom0, atom1, atom2, atom3, theta, verbose=False):
 
 
 
-
-def oemol_perturb(mol, central_atom, outer_atom, angle_type,  theta):
+def oemol_perturb(smilesList, angle_type, molClass, pertRange, pertIncr):
     """
-    From an OpenEye OEMol, specify the improper angle and the specific atom of
-    that improper that should be perturbed. The improper angles are obtained
-    from the find_improper_angles function in the calc_improper script.
+    The function takes in a list of smiles strings, converts the smiles strings into OpenEye
+    OEMols and then performs either a valence or improper perturbation to the molecules geometry
+    by a specified angle "theta". The function creates an output .sdf file which contains all the
+    molecules from the smilesList and a SD tag that contains the the indices of the atoms that
+    are in the improper molecule center. The first index is the center of the improper and the last
+    index indicates the atom that was perturbed in the geometry change. The function utilizes
+    find_improper_angles from the calc_improper.py script to identify the improper locations in the molecule.
+
+    The code will iterate through each trivalent center, and perturb the centers individually in the output
+    .sdf file. The code will also generate 3 perturbed geometries for each nitrogen center where each of the
+    individual constiutuents will be perturbed individually.
+
 
     Parameters
     ---------
-    mol : OpenEye OEMol
-        molecule from which to generate perturbed geometry
-    central_atom : indices
-        atom indice in the mol which is central to the improper of interest
-        Ex., "3"
-    outer_atom : indices
-        atom indice in the mol which is to be rotated
-        Ex., "7"
-    True: Boolean
-        True = Improper perturbation
-        False = Valence perturbation
-        Ex., True
-    theta : float
-        how many degrees by which to rotate
+    smilesList : List of smiles strings
+    angle_tyle:
+        True: Boolean
+            True = Improper perturbation
+            False = Valence perturbation
+            Ex., True
+    molClass : String
+        Type of molecules
+        Ex., pyrnitrogens
+    PertRang : Int
+        The range of degrees the attached atom will be perturbed by
+    pertIncr: Int
+        The increment of degrees that the molecule with be perturbed by
 
-    [TODO]
+    Returns
+    --------
+    .sdf file for each molecule in smiles string that perturbs the improper or valence by increments specified in specified
+    range with tags that include the frozen indices of the molecule
 
     """
+
     #Set perturbation type
     if angle_type == True:
         angle_type = perturb_improper
+        perturbation = "improper"
     else:
         angle_type = perturb_valence
+        perturbation = "valence"
+
+    #convert smilesList into OEMols
+    for key, smiles in smilesList.items():
+        mol = oechem.OEMol()
+        oechem.OESmilesToMol(mol, smiles)
+        oechem.OEAddExplicitHydrogens(mol)
+        omega = oeomega.OEOmega()
+        omega.SetMaxConfs(1)
+        omega(mol)
+        impCent = find_improper_angles(mol)
+
+        centcount = 0
+        constcount = 0
+        for center in impCent[1]:
+            for constituent in center:
+                constcount +=1
+                #determine which improper angle on the atom is of interest and store the coordinates of the improper in  various variables
+                #cmol is the parent mol which we will add conformers to
+                cmol = oechem.OEMol(mol)
+                print("~~~~print~~~~")
+                print(constituent)
+                mol_pert = str(constituent)
+                print(center)
+                print(center[0])
+                center_atom = cmol.GetAtom(oechem.OEHasAtomIdx(center[0]))
+                if constituent == center[0]:
+                    continue
+                move_atom = cmol.GetAtom(oechem.OEHasAtomIdx(constituent))
+                center_coord = np.array(cmol.GetCoords(center_atom))
+                move_coord = np.array(cmol.GetCoords(move_atom))
 
 
-    #determine which improper angle on the atom is of interest and store the coordinates of the improper in  various variables
-    cmol = oechem.OEMol(mol)
-    center_atom = cmol.GetAtom(oechem.OEHasAtomIdx(central_atom))
-    move_atom = cmol.GetAtom(oechem.OEHasAtomIdx(outer_atom))
-    center_coord = np.array(cmol.GetCoords(center_atom))
-    move_coord = np.array(cmol.GetCoords(move_atom))
+                #center_coord = center[0]
+                #move_atom = constituent
+                other_coords = list()
 
-    other_coords = list()
-    for neighbor in center_atom.GetAtoms():
-        if neighbor.GetIdx() !=  outer_atom:
-            new_coord = np.array(cmol.GetCoords(neighbor))
-            other_coords.append(new_coord)
-
-    atom0, atom1, atom2, atom3_rot = angle_type(center_coord, other_coords[0], other_coords[1], move_coord, theta)
-    cmol.SetCoords(move_atom, oechem.OEFloatArray(atom3_rot))
-
-    # Create an output file for visualization: .pdb file
-    angle = str(theta)
-    perturbation_type = angle_type.__name__
-
-    #adding the index of the trivalent center to the SD tags
-    lisltofIdx = "%d, %d, %d, %d" % (indexList[0], indexList[1], indexList[2], indexList[3])
-    oechem.OEAddSDData(oemol, "Index list around trivalent nitrogen center: ", listofIdx)
+                #if constituent != center_coord:
+                #    if constituent != move_atom:
+                #        other_coords.append(constituent)
 
 
-    ofile = oechem.oemolostream(angle + '_' + perturbation_type + 'molecule.mol2')
-    oechem.OEWriteMolecule(ofile, cmol)
+                for neighbor in center_atom.GetAtoms():
+                    if neighbor.GetIdx() !=  constituent:
+                        new_coord = np.array(cmol.GetCoords(neighbor))
+                        other_coords.append(new_coord)
 
-    ofile.close()
+                # rotate atom by desired increment, and write out each perturbation to the .sdf file
+                # DEBUGGING
+                theta = 0
+                print(pertRange)
 
-    return cmol
+                oemol_list = [cmol]
+                #in the list adding tags for the indices around the nitrogen center, improver or valence move, and angle of perturbation
+                #oechem.OEAddSDData(oemol_list[0], "Angle OEmol is perturbed by: ", 0)
+		#oechem.OEAddSDData(oemol_list[0], "Type of perturbation (improper or valence): ", perturbation)
+                ofile = oechem.oemolostream(str(molClass) + "_" + str(key) + "_constituent_" +  mol_pert  +'.sdf')
+                count = 1
+                while theta < pertRange:
+                    atom0, atom1, atom2, atom3_rot = angle_type(center_coord, other_coords[0], other_coords[1], move_coord, theta)
+                    move_mol = oechem.OEMol(oemol_list[0])
+                    move_mol.SetCoords(move_atom, oechem.OEFloatArray(atom3_rot))
+                    oechem.OEAddSDData(move_mol, "Index list around trivalent nitrogen center: ", str(center))
+                    oechem.OEAddSDData(move_mol, "Angle OEmol is perturbed by: ", str(theta))
+                    oechem.OEAddSDData(move_mol, "Type of perturbation (improper or valence): ", perturbation)
+                    oemol_list.append(move_mol)
+                    oechem.OEWriteConstMolecule(ofile, move_mol)
+                    #count for while loop
+                    theta += pertIncr
+                    count += 1
+                ofile.close()
+                print("end of loop")
+
+    return
+
+
+
 
