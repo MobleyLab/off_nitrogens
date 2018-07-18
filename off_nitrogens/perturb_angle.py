@@ -168,11 +168,9 @@ def input2mol(xyz):
     """
     ifs = oechem.oemolistream()
     for key, value in xyz.items():
-        print(value)
         ifs.open(value)
         for mol in ifs.GetOEGraphMols():
-            xyz[key] = mol
-    print(xyz)
+            xyz[key] = oechem.OEGraphMol(mol)
     return xyz
 
 """
@@ -243,14 +241,9 @@ def oemol_perturb(molList, angle_type, molClass, pertRange, pertIncr):
     else:
         angle_type = perturb_valence
         perturbation = "valence"
-    print("within function")
-    print(molList)
     #convert molList into OEMols
     for key, mol in molList.items():
-        print(key)
-        print(mol)
         impCent = find_improper_angles(mol)
-        print(impCent)
         centcount = 0
         constcount = 0
         for center in impCent[1]:
@@ -259,12 +252,7 @@ def oemol_perturb(molList, angle_type, molClass, pertRange, pertIncr):
                 #determine which improper angle on the atom is of interest and store the coordinates of the improper in  various variables
                 #cmol is the parent mol which we will add conformers to
                 cmol = oechem.OEMol(mol)
-                print(cmol)
-                print("~~~~print~~~~")
-                print(constituent)
                 mol_pert = str(constituent)
-                print(center)
-                print(center[0])
                 center_atom = cmol.GetAtom(oechem.OEHasAtomIdx(center[0]))
                 if constituent == center[0]:
                     continue
@@ -293,30 +281,40 @@ def oemol_perturb(molList, angle_type, molClass, pertRange, pertIncr):
                 print(pertRange)
 
                 oemol_list = [cmol]
+
                 #in the list adding tags for the indices around the nitrogen center, improver or valence move, and angle of perturbation
-                #oechem.OEAddSDData(oemol_list[0], "Angle OEmol is perturbed by: ", 0)
-		#oechem.OEAddSDData(oemol_list[0], "Type of perturbation (improper or valence): ", perturbation)
                 ofile = oechem.oemolostream(str(molClass) + "_" + str(key) + "_constituent_" +  mol_pert +"_" + perturbation +'.sdf')
                 count = 1
-                while theta < pertRange:
+                theta = (360 - (pertRange/2))
+                print("starting theta:" + str(theta))
+                maxRange = ((pertRange/2)+360)
+                print("Max range:" + str(maxRange))
+                pertTheta = -(pertRange/2)
+                while theta < maxRange:
+                    #move in direction of theta
                     atom0, atom1, atom2, atom3_rot = angle_type(center_coord, other_coords[0], other_coords[1], move_coord, theta)
                     move_mol = oechem.OEMol(oemol_list[0])
                     move_mol.SetCoords(move_atom, oechem.OEFloatArray(atom3_rot))
                     move_mol.SetTitle(str(molClass) + "_" + str(key) + "_constituent_" +  mol_pert +"_" + perturbation)
                     oechem.OEAddSDData(move_mol, "Index list of atoms to freeze", str(center))
-                    oechem.OEAddSDData(move_mol, "Angle OEMol is perturbed by", str(theta))
+                    oechem.OEAddSDData(move_mol, "Angle OEMol is perturbed by", str(pertTheta))
                     oechem.OEAddSDData(move_mol, "Type of perturbation (improper or valence)", perturbation)
                     oemol_list.append(move_mol)
                     oechem.OEWriteConstMolecule(ofile, move_mol)
 
                     #seperate .mol2 for each perturbation
-                    mfile = oechem.oemolostream(str(molClass) + "_" + str(key) + "_constituent_" +  mol_pert + "_" + perturbation + '_angle_'+ str(theta) +'.mol2')
+                    mfile = oechem.oemolostream(str(molClass) + "_" + str(key) + "_constituent_" +  mol_pert + "_" + perturbation + '_angle_'+ str(pertTheta) +'.mol2')
                     oechem.OEWriteConstMolecule(mfile, move_mol)
                     mfile.close()
+
+
 
                     #count for while loop
                     theta += pertIncr
                     count += 1
+                    pertTheta += pertIncr
+
+
                 ofile.close()
                 print("end of loop")
 
