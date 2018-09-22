@@ -48,8 +48,9 @@ script:
   # Make sure the --cov variable is the name of the current package
   - py.test -v -s
 
-global:
-  - OE_LICENSE="$HOME/oe_license.txt"
+env:
+  global:
+    - OE_LICENSE="$HOME/oe_license.txt"
 
 notifications:
   email: false
