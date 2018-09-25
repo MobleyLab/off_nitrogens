@@ -6,7 +6,10 @@ language: python
 # Run jobs on container-based infrastructure, can be overridden per job
 sudo: false
 
-python: # what python are you supporting?
+env:
+  global:
+    - OE_LICENSE="$HOME/oe_license.txt"
+  python: # what python are you supporting?
     - 3.5
     - 3.6
 
@@ -47,10 +50,6 @@ before_script:
 script:
   # Make sure the --cov variable is the name of the current package
   - py.test -v -s
-
-env:
-  global:
-    - OE_LICENSE="$HOME/oe_license.txt"
 
 notifications:
   email: false
