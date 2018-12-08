@@ -1,5 +1,3 @@
-
-
 ###WIP:
 ### This script will take an .xyz (scan-final.xyz) from the finished QM torsion scan and generate/process data to create a plot of QM and MM energies.
 
@@ -101,3 +99,20 @@ def makeOEB(oemolList, title):
 
 
 #Main
+def processData(sdffile, xyzfile, constraintFile, moltitle, FF, FFRmNit):
+    """
+    Description:
+    Takes in innitial .sdf file, xyzfile from geomeTRIC output, constraint file and a title to
+    create an .oeb file with oemols with QM, and MM data.
+    """
+    oemolList = QM2Oemol(SDF2oemol(sdffile), xyzfile)
+
+    for mol in oemolList:
+        GetMM(mol, FF, FFRmNit)
+        findAngles(oemol, constraint, Scan=True)
+
+    makeOEB(oemolList, title)
+
+
+
+
