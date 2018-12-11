@@ -3,7 +3,13 @@
 
 
 #Imports
-
+from openforcefield.typing.engines.smirnoff import *
+from openforcefield.utils import get_data_filename, extractPositionsFromOEMol, generateTopologyFromOEMol
+from openeye.oechem import *
+#import oenotebook as oenb
+from openeye.oeomega import * # conformer generation
+from openeye.oequacpac import * #for partial charge assignment
+from calc_improper import *
 
 
 
@@ -20,12 +26,36 @@ def SDF2oemol(sdffile):
     Returns:
     Oemol: Oemol object of the molecule stored in the input .sdf file
     """
-    #WIP
-
+    ifs = oechem.oemolistream()
+    ifs.open(sdffile)
+    oemol = ifs.GetOEGraphMols()
+    print(oemol)
+    coords = oemol.GetCoords()
+    oemol.SetCoords(coords)
     return oemol
 
+def smiles2oemol(smiles):
+    """
+    Description:
+    Takes in an SMILES string and returns an oemol.
 
-def QM2oemol(xyzfile, oemol):
+    Input:
+    smiles: SMILES string for molecule
+
+    Returns:
+    mol1: OEMol object
+    """
+    mol1 = OEMol()
+    OESmilesToMol(mol1, smiles)
+
+    #assign charges, necessary to keep?
+    chargeEngine = OEAM1BCCCharges()
+    OEAssignCharges(mol1, chargeEngine)
+
+    return mol1
+
+
+def QM2Oemol(xyzfile, oemol):
     """
     Description:
     Takes in an xyz file and creates oemol objects with the coordinates in the original .xyz file
@@ -38,10 +68,38 @@ def QM2oemol(xyzfile, oemol):
     Returns:
     oemolList: A list of OEmols that contain the QM data tagged as "QMEng"
     """
-    #WIP
 
+    #open input xyz file
+    ifs = oechem.oemolistream()
+    ifs.open(xyzfile)
 
+    #generate empty list of oemols
+    oemolList=list()
+
+    #iterate through oemols and set coordinates to original oemol
+    for mol in ifs.GetOEGraphMols():
+        #get coordinates
+        print(mol.GetTitle())
+        coords = mol.GetCoords()
+        print(coords)
+        #set coordinates of original oemol with correct bond connectivity
+        newmol = copy.deepcopy(oemol)
+        newmol.SetCoords(coords)
+        #get the energies from the .xyz file title and save in oemol data
+        title = mol.GetTitle()
+        energy = float(str.split(title)[-1])
+        energy_kcal= energy * 627.509
+        #set the QM energy in a tag called qm
+        newmol.SetData("QM", energy_kcal)
+
+        #append the list with the new mol that has stored QM energies
+        oemolList.append(newmol)
+
+        #test energy Data tags
+        for k in oemolList:
+            print(k.GetData("QM"))
     return oemolList
+
 
 def GetMM(oemol, FF, FFRmNit):
     """
@@ -56,12 +114,32 @@ def GetMM(oemol, FF, FFRmNit):
     FFRmNit: .offxml file of smirnoff99Frosst.offxml with the removed nitrogen improper parameter
 
     Return:
-    oemolMM: An oemol with the MM energies stored in tags MM and MMRmNit in kcal/mol
+    oemol: An oemol with the MM energies stored in tags MM and MMRmNit in kcal/mol
     """
 
-    #WIP
+    #prep both force fields, create system and topology, get MM energies and store in data tag
+    ff = ForceField(FF)
+    topology = generateTopologyFromOEMol(oemol)
+    system = ff.createSystem(topology, [oemol])
+    positions = extractPositionsFromOEMol(oemol)
+    simulation = app.Simulation(topology, system, integrator)
+    simulation.context.setPositions(positions)
+    state = simulation.context.getState(getEnergy = True, getPositions=True)
+    energy = state.getPotentialEnergy() / unit.kilocalories_per_mole
+    oemol.SetData("MM", energy)
 
-    return oemolMM
+    #repeat with removed nitrogen
+    ffn = ForceField(FFRmNit)
+    topology = generateTopologyFromOEMol(oemol)
+    system = ffn.createSystem(topology, [oemol])
+    positions = extractPositionsFromOEMol(oemol)
+    simulation = app.Simulation(topology, system, integrator)
+    simulation.context.setPositions(positions)
+    state = simulation.context.getState(getEnergy = True, getPositions=True)
+    energy_rm = state.getPotentialEnergy() / unit.kilocalories_per_mole
+    oemol.SetData("MMRmNit", energy_rm)
+
+    return oemol
 
 def findAngles(oemol, constraint, Scan=True):
     """
@@ -76,11 +154,21 @@ def findAngles(oemol, constraint, Scan=True):
     valence paramters will also be calculated.
 
     Return:
-    oemolImp: An oemol with the calculated improper or valence angles with corresponding tags
+    oemol: An oemol with the calculated improper or valence angles with corresponding tags
     "improper" or "valence"
     """
+
+    #determine the constraints
+    #open the constraint file
+    constraintfile = open(constraint, "r")
+
+
+
+    imp = find_improper_angles(k)[0][0]
+    imp_ang = calc_improper_angle(imp[0], imp[2], imp[1], imp[3], True)
+
     #WIP
-    return oemolImp
+    return oemol
 
 def makeOEB(oemolList, title):
     """
@@ -105,7 +193,7 @@ def processData(sdffile, xyzfile, constraintFile, moltitle, FF, FFRmNit):
     Takes in innitial .sdf file, xyzfile from geomeTRIC output, constraint file and a title to
     create an .oeb file with oemols with QM, and MM data.
     """
-    oemolList = QM2Oemol(SDF2oemol(sdffile), xyzfile)
+# fix, out of order function inputs    oemolList = QM2Oemol(SDF2oemol(sdffile), xyzfile)
 
     for mol in oemolList:
         GetMM(mol, FF, FFRmNit)
@@ -113,6 +201,12 @@ def processData(sdffile, xyzfile, constraintFile, moltitle, FF, FFRmNit):
 
     makeOEB(oemolList, title)
 
+#plotting
 
 
 
+
+
+#test
+#QM2Oemol('scan-final.xyz', SDF2oemol('molClass_pyrnit_molecule_6.mol2'))
+QM2Oemol('scan-final.xyz', smiles2oemol('CS(=O)(=O)Nc1ncncc1'))
