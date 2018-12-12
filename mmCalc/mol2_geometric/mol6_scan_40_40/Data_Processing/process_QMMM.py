@@ -10,7 +10,7 @@ from openeye.oechem import *
 from openeye.oeomega import * # conformer generation
 from openeye.oequacpac import * #for partial charge assignment
 from calc_improper import *
-
+import numpy as np
 
 
 
@@ -141,7 +141,7 @@ def GetMM(oemol, FF, FFRmNit):
 
     return oemol
 
-def findAngles(oemol, constraint, Scan=True):
+def findAngles(oemol, constraint):
     """
     Description:
     Calculates the improper (and potentially valence) angles of an oemol and stores the value in
@@ -149,9 +149,7 @@ def findAngles(oemol, constraint, Scan=True):
 
     Input:
     oemol: An oemol object
-    constraint: An constraint.txt file used in an input for an geomeTRIC scan
-    Scan: A boolean, True = 1d torsion scan, False = 2d torsion scan. If 2d torsion scan, the
-    valence paramters will also be calculated.
+    constraint: An constraints.txt file used in an input for an geomeTRIC scan
 
     Return:
     oemol: An oemol with the calculated improper or valence angles with corresponding tags
@@ -161,30 +159,120 @@ def findAngles(oemol, constraint, Scan=True):
     #determine the constraints
     #open the constraint file
     constraintfile = open(constraint, "r")
+    f = open(constraint)
+    lines = f.readlines()
+    f.close()
+    coords = oemol.GetCoords()
 
+    for l in lines:
+        if "dihedral" in l:
+            split = l.split()
+            atoms_imp = (int(split[1])-1, int(split[2])-1, int(split[3])-1, int(split[4])-1)
+            print(atoms_imp)
+            crd1 = np.asarray(coords[atoms_imp[0]])
+            crd2 = np.asarray(coords[atoms_imp[1]])
+            crd3 = np.asarray(coords[atoms_imp[2]])
+            crd4 = np.asarray(coords[atoms_imp[3]])
+            angle_imp = calc_improper_angle(crd1, crd2, crd3, crd4, True)
+            print(angle_imp)
+            if angle_imp < 90 and angle_imp > 0:
+                oemol.SetData("improper", angle_imp)
+            if angle_imp < 0:
+                if angle_imp < -90:
+                    #angle_imp = 180 + angle_imp
+                    oemol.SetData("improper", angle_imp)
+            if angle_imp > 90:
+                angle_imp = angle_imp - 180
+                oemol.SetData("improper", angle_imp)
+            print(angle_imp)
 
+        #calculate the valence angle and store in tag (2-d scan)
+        if "angle" in l:
+            split = l.split()
+            atoms_val = (int(split[1])-1, int(split[2])-1, int(split[3])-1)
+            crd1 = np.asarray(coords[atoms_val[0]])
+            crd2 = np.asarray(coords[atoms_val[1]])
+            crd3 = np.asarray(coords[atoms_val[2]])
+            angle_val= calc_valence_angle(crd1, crd2, crd3)
+            oemol.SetData("valence", angle_val)
 
-    imp = find_improper_angles(k)[0][0]
-    imp_ang = calc_improper_angle(imp[0], imp[2], imp[1], imp[3], True)
-
-    #WIP
     return oemol
 
-def makeOEB(oemolList, title):
+
+
+
+makeOEB(oemolList, tag):
     """
     Description:
     Takes in an oemol list and creates an output OEB file.
 
     Input:
     oemolList: A list of oemols
-    title: The title of the OEB file.
+    tag: The title of the OEB file.
 
     Return:
     """
-    #WIP
-    return
+    #empty list to store energies
+    energy=list()
+
+    #iterate through the mols and get corresponding QM energies
+    for mol in oemolList:
+        mol.GetData(tag)
+
+    #find the lowest QM energy in the list, store this energy in low
+
+    #subtract the lowest QM energy from all OEMols
+
+    #subtract the MM energy from the corresponding geometry in the MM energies
 
 
+    #return the updated oemolList with normalized MM and QM energies for plotting
+    return oemolList
+
+
+
+
+
+def adjust_energy(oemolList, qm_tag, mm_tag):
+    """
+    Description:
+    Iterates through oemols in a list and normalizes the energies to the lowest
+    QM energy in the list. The corresponding MM energy geometry is subtracted from the
+    MM energies tagged in the oemol.
+
+    Input:
+    oemolList: A list of oemols
+    qm_tag: The tag for the qm energy
+    mm_tag: The tag for the mm energy being normalized
+
+    Return:
+    oemolList with the updated energies.
+    """
+
+    #sort the oemols based on the lowest QM energy, this oemol is now "low_mol"
+    low_mol = sorted(oemolList, key=lambda x: x.GetData(qm_tag))[0]
+    #get corresponding lowest qm energy
+    low_qm = low_mol.GetData(qm_tag)
+    #get correspoding lowest mm energy
+    low_mm = low_mol.GetData(mm_tag)
+
+    #iterate through the list and subtract lowest mm and qm energies
+    for m in oemolList:
+        qm = m.GetData(qm_tag) - low_qm
+        m.SetData(qm_tag, qm)
+        mm = m.GetData(mm_tag) - low_mm
+        m.SetData(mm_tag, mm)
+
+    return oemolList
+
+
+#TO-DO:
+#Finish function for .oeb file storage
+#Create plotting function
+#Test MM energy function
+#Test normalization function
+#Fix .sdf or .mol2 starting file, only smiles string works currently
+#
 
 #Main
 def processData(sdffile, xyzfile, constraintFile, moltitle, FF, FFRmNit):
@@ -202,6 +290,8 @@ def processData(sdffile, xyzfile, constraintFile, moltitle, FF, FFRmNit):
     makeOEB(oemolList, title)
 
 #plotting
+for mol in QM2Oemol('scan-final.xyz', smiles2oemol('CS(=O)(=O)Nc1ncncc1')):
+    findAngles(mol, 'constraints.txt')
 
 
 
@@ -209,4 +299,6 @@ def processData(sdffile, xyzfile, constraintFile, moltitle, FF, FFRmNit):
 
 #test
 #QM2Oemol('scan-final.xyz', SDF2oemol('molClass_pyrnit_molecule_6.mol2'))
-QM2Oemol('scan-final.xyz', smiles2oemol('CS(=O)(=O)Nc1ncncc1'))
+for mol in QM2Oemol('scan-final.xyz', smiles2oemol('CS(=O)(=O)Nc1ncncc1')):
+    findAngles(mol, 'constraints.txt')
+
