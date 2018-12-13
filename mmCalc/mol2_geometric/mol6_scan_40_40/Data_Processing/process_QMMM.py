@@ -11,7 +11,7 @@ from openeye.oeomega import * # conformer generation
 from openeye.oequacpac import * #for partial charge assignment
 from calc_improper import *
 import numpy as np
-
+import matplotlib.pyplot as plt
 
 
 #Functions
@@ -26,12 +26,15 @@ def SDF2oemol(sdffile):
     Returns:
     Oemol: Oemol object of the molecule stored in the input .sdf file
     """
+    #open file
     ifs = oechem.oemolistream()
+    oemol = oechem.OECreateOEGraphMol()
     ifs.open(sdffile)
-    oemol = ifs.GetOEGraphMols()
-    print(oemol)
-    coords = oemol.GetCoords()
-    oemol.SetCoords(coords)
+    #empty oemol list
+    molecules = list()
+    oechem.OEReadMolecule(ifs, oemol)
+    ifs.close()
+    print(oemol.GetCoords())
     return oemol
 
 def smiles2oemol(smiles):
@@ -79,9 +82,7 @@ def QM2Oemol(xyzfile, oemol):
     #iterate through oemols and set coordinates to original oemol
     for mol in ifs.GetOEGraphMols():
         #get coordinates
-        print(mol.GetTitle())
         coords = mol.GetCoords()
-        print(coords)
         #set coordinates of original oemol with correct bond connectivity
         newmol = copy.deepcopy(oemol)
         newmol.SetCoords(coords)
@@ -95,9 +96,6 @@ def QM2Oemol(xyzfile, oemol):
         #append the list with the new mol that has stored QM energies
         oemolList.append(newmol)
 
-        #test energy Data tags
-        for k in oemolList:
-            print(k.GetData("QM"))
     return oemolList
 
 
@@ -122,21 +120,25 @@ def GetMM(oemol, FF, FFRmNit):
     topology = generateTopologyFromOEMol(oemol)
     system = ff.createSystem(topology, [oemol])
     positions = extractPositionsFromOEMol(oemol)
+    integrator = openmm.VerletIntegrator(2.0*unit.femtoseconds)
     simulation = app.Simulation(topology, system, integrator)
     simulation.context.setPositions(positions)
     state = simulation.context.getState(getEnergy = True, getPositions=True)
     energy = state.getPotentialEnergy() / unit.kilocalories_per_mole
+    print("this is the original mm energy: " + str(energy))
     oemol.SetData("MM", energy)
 
     #repeat with removed nitrogen
     ffn = ForceField(FFRmNit)
     topology = generateTopologyFromOEMol(oemol)
-    system = ffn.createSystem(topology, [oemol])
+    system_n = ffn.createSystem(topology, [oemol])
     positions = extractPositionsFromOEMol(oemol)
-    simulation = app.Simulation(topology, system, integrator)
+    integrator = openmm.VerletIntegrator(2.0*unit.femtoseconds)
+    simulation = app.Simulation(topology, system_n, integrator)
     simulation.context.setPositions(positions)
     state = simulation.context.getState(getEnergy = True, getPositions=True)
     energy_rm = state.getPotentialEnergy() / unit.kilocalories_per_mole
+    print("this is the original mm energy: " + str(energy))
     oemol.SetData("MMRmNit", energy_rm)
 
     return oemol
@@ -200,8 +202,8 @@ def findAngles(oemol, constraint):
 
 
 
-
-makeOEB(oemolList, tag):
+#TODO
+def makeOEB(oemolList, tag):
     """
     Description:
     Takes in an oemol list and creates an output OEB file.
@@ -211,23 +213,13 @@ makeOEB(oemolList, tag):
     tag: The title of the OEB file.
 
     Return:
+
     """
-    #empty list to store energies
-    energy=list()
-
-    #iterate through the mols and get corresponding QM energies
+    ofile = oemolostream(tag+'.oeb')
     for mol in oemolList:
-        mol.GetData(tag)
-
-    #find the lowest QM energy in the list, store this energy in low
-
-    #subtract the lowest QM energy from all OEMols
-
-    #subtract the MM energy from the corresponding geometry in the MM energies
-
-
-    #return the updated oemolList with normalized MM and QM energies for plotting
-    return oemolList
+        OEWriteConstMolecule(ofile, mol)
+    ofile.close()
+    return
 
 
 
@@ -253,8 +245,11 @@ def adjust_energy(oemolList, qm_tag, mm_tag):
     low_mol = sorted(oemolList, key=lambda x: x.GetData(qm_tag))[0]
     #get corresponding lowest qm energy
     low_qm = low_mol.GetData(qm_tag)
+
     #get correspoding lowest mm energy
+    #low_mol_mm = sorted(oemolList, key=lambda x: x.GetData(mm_tag))[0]
     low_mm = low_mol.GetData(mm_tag)
+    print("this is the low mm value:" + str(low_mm))
 
     #iterate through the list and subtract lowest mm and qm energies
     for m in oemolList:
@@ -266,6 +261,61 @@ def adjust_energy(oemolList, qm_tag, mm_tag):
     return oemolList
 
 
+def plotResults(oemolList):
+    """
+    Description: This function plots the QM and MM data for 1d torsion scans
+
+    Input:
+    oemolList: List of eomols with stored angles, MM, and QM energies
+    """
+    #sort oemolList based on the improper angles
+    sort_oemol = sorted(oemolList, key=lambda x: x.GetData('improper'))
+
+    xs = [m.GetData('improper') for m in sort_oemol]
+    qm = [m.GetData('QM') for m in sort_oemol]
+    mm = [m.GetData('MM') for m in sort_oemol]
+    mm_nit = [m.GetData('MMRmNit') for m in sort_oemol]
+
+    plt.plot(xs, qm, color="royalblue", label='QM', marker='^',markersize="8", linewidth="3")
+    plt.plot(xs, mm, color="red", label='MM', marker='^',markersize="8", linewidth="3")
+    plt.plot(xs, mm_nit, color="orange", label='MM removed Imp.', marker='^',markersize="8", linewidth="3")
+    #plt.plot(xs, qm, color="royalblue", label='Carbon 1', marker='^',markersize="12", linewidth="5")
+    plt.legend()
+    plt.show()
+
+
+def oeb2mollist(oeb):
+    """
+    Description:
+    Takes in oeb file and creates oemolList
+
+    Input:
+    oeb: oeb file
+
+    Return:
+    oemolList: a list of eomols contained in the .oeb file
+    """
+
+    #open input xyz file
+    ifs = oechem.oemolistream()
+    ifs.open(oeb)
+
+    #generate empty list of oemols
+    oemolList=list()
+
+    #iterate through oemols and set coordinates to original oemol
+    for mol in ifs.GetOEGraphMols():
+        oemolList.append(oechem.OEGraphMol(mol))
+
+    return oemolList
+
+
+
+
+
+
+
+
 #TO-DO:
 #Finish function for .oeb file storage
 #Create plotting function
@@ -275,30 +325,57 @@ def adjust_energy(oemolList, qm_tag, mm_tag):
 #
 
 #Main
-def processData(sdffile, xyzfile, constraintFile, moltitle, FF, FFRmNit):
+def processData(smiles, xyzfile, constraintFile, moltitle, FF, FFRmNit):
     """
     Description:
     Takes in innitial .sdf file, xyzfile from geomeTRIC output, constraint file and a title to
     create an .oeb file with oemols with QM, and MM data.
-    """
-# fix, out of order function inputs    oemolList = QM2Oemol(SDF2oemol(sdffile), xyzfile)
+    Also generates plot comparing QM and MM energies.
 
+
+    input:
+    #UPDATE to .sdf or .mol2 file
+    smiles: Smiles string for molecule
+    xyzfile: output .xyz file from geomeTRIC scan, scan-final.xyz that contains QM energies in title
+    constraintFile: constraint.txt for geomeTRIC input that contains the indicies constrained in scan
+    molTitle: title for the output .oeb file
+    FF: Forcefield
+    FFRmNit: Force field with removed nitrogens
+
+    Return:
+    none, generates .oeb file and plot of data
+    """
+
+    #generate lsit of oemols with stored QM energies
+    oemolList = QM2Oemol(xyzfile, SDF2oemol(smiles))
+
+    #get MM energies and improper angles from geometries (and potentially valence depending no the scan)
     for mol in oemolList:
         GetMM(mol, FF, FFRmNit)
-        findAngles(oemol, constraint, Scan=True)
+        findAngles(mol, constraintFile)
 
-    makeOEB(oemolList, title)
+    #normalize eneriges:
+    adjust_energy(oemolList, 'QM', 'MM')
+    adjust_energy(oemolList, 'QM', 'MMRmNit')
 
-#plotting
-for mol in QM2Oemol('scan-final.xyz', smiles2oemol('CS(=O)(=O)Nc1ncncc1')):
-    findAngles(mol, 'constraints.txt')
+    #write out oeb file
+    makeOEB(oemolList, moltitle)
+    #plot results
+    plotResults(oemolList)
+
+    return
 
 
 
+
+
+
+
+#plotResults(oeb2mollist('results.oeb'))
 
 
 #test
-#QM2Oemol('scan-final.xyz', SDF2oemol('molClass_pyrnit_molecule_6.mol2'))
-for mol in QM2Oemol('scan-final.xyz', smiles2oemol('CS(=O)(=O)Nc1ncncc1')):
-    findAngles(mol, 'constraints.txt')
+processData('mol6.sdf', 'scan-final.xyz', 'constraints.txt', 'fixresults', 'smirnoff99Frosst.offxml', 'nitRem.offxml')
+
+
 
