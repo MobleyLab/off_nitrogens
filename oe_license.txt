@@ -1,0 +1,176 @@
+################# ACADEMIC LICENSE ##################################
+#                                                                   #
+#   This file is a license for OpenEye Scientific Software.  Any    #
+#   modifications to this file may invalidate the license.          #
+#                                                                   #
+#   The Laboratory of David Mobley                                  #
+#   University of California, Irvine                                #
+#                                                                   #
+#   Wed May 20 09:45:15 2020                                        #
+#####################################################################
+#PRODUCT: afitt
+#EXP_DATE: 2021 05 20
+#FEATURES: beta
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: 3edc6b0d12e51674452d08fa1f9f1f16faf942d1c61ac5b5db959f7188fab722
+#PRODUCT: bioisostere
+#EXP_DATE: 2021 05 20
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: 8a36ec59132c4830f272c29d78bb48f4da236f3299a5bfea86861f2babdd084d
+#PRODUCT: docking
+#EXP_DATE: 2021 05 20
+#FEATURES: python;java;clr
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: 783b7ff723fa3ee9815008c51eca10c4d978892e56839ffa1e29f46290b26b66
+#PRODUCT: eon
+#EXP_DATE: 2021 05 20
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: a7374d28aed0e6183c32ca44225aa621a8ee1f207ac7f7c265c5976e7a1e3b6f
+#PRODUCT: fastrocs
+#EXP_DATE: 2021 05 20
+#FEATURES: python;java;clr
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: 9d6938c0b43a6c5fa30579ef52da01bcc2f15aed501725bb4a20862dd023461d
+#PRODUCT: filter
+#EXP_DATE: 2021 05 20
+#FEATURES: toolkit;python;java;clr
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: c292c6f322898776e0f58e72840afaffa02b97db4c8447ff66e09d78d5de3cfb
+#PRODUCT: flynn
+#EXP_DATE: 2021 05 20
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: 177a3ee6a43a6d10d21455e7b46a83c90e7201f11008050084663f8166b7c33d
+#PRODUCT: fred2
+#EXP_DATE: 2021 05 20
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: 3594b3b4b42ebcdb6155ac240463ad7bec7bd97b2b3be502057f2d0d39b73166
+#PRODUCT: grapheme
+#EXP_DATE: 2021 05 20
+#FEATURES: python;java;clr
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: bed6aece5156ed756fd7a20b5d6cdae590dbdfec9ad43b80eda1ad2f4dfe16ab
+#PRODUCT: graphsim
+#EXP_DATE: 2021 05 20
+#FEATURES: python;java;clr
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: 0e5a6a6b2273052cc6c551473b39b131debf8021a1cae2eb811d102c48419c42
+#PRODUCT: iupac
+#EXP_DATE: 2021 05 20
+#FEATURES: python;java;clr
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: addcdb317406233edfdbb168d40730f820b5c41d14cdc9afece6b4a2abf88290
+#PRODUCT: oechem
+#EXP_DATE: 2021 05 20
+#FEATURES: python;java;clr
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: 64ab41272a3f33abc510ec0241422a771d031b136a7dfe12430406ab619e8355
+#PRODUCT: oedepict
+#EXP_DATE: 2021 05 20
+#FEATURES: python;java;clr
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: 32f77a8d62e644d2f6158537d89217d09205a64dfd420f7c09013035e4ed4b30
+#PRODUCT: oemedchem
+#EXP_DATE: 2021 05 20
+#FEATURES: python;java;clr
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: e3eaccaaa0b6f336c11232b6735d420ec4a754a27dfe8238d4b73bdc7d8f2be6
+#PRODUCT: omega
+#EXP_DATE: 2021 05 20
+#FEATURES: gas-phase;toolkit;python;java;clr
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: 546d0490951fad5772f20329f4b0efe3a5426ee2e3c8b224d357c73032dc9c5d
+#PRODUCT: omega-db
+#EXP_DATE: 2021 05 20
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: 653b4a5fe8bb531543055e209ab5325652aa493e521101772ec123541a8adcec
+#PRODUCT: posit
+#EXP_DATE: 2021 05 20
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: b29d29937c26152f919fb31f490b7530c85737065cad6e0b7aa708fbc0b29269
+#PRODUCT: quacpac
+#EXP_DATE: 2021 05 20
+#FEATURES: beta;python;java;clr
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: 03d6ff0422247221cc1266beadc1d001f918ae6b9e05b7cfdbdd1ecd8515a1ba
+#PRODUCT: rocs
+#EXP_DATE: 2021 05 20
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: d6f31b019f01a984edcc559b49be1e5e685f12828f3879aa38a35a2e81d9e28f
+#PRODUCT: shape
+#EXP_DATE: 2021 05 20
+#FEATURES: molecules;grids;python;java;clr
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: e2bc18ecc1864ed9a4a4aeb66b599eab23dd61d22ff81438502de41ea658423b
+#PRODUCT: spicoli
+#EXP_DATE: 2021 05 20
+#FEATURES: python;java;clr
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: 7612ede04857d9cc6eba075e97f4499796fe9432db4b9308839125faf2983a8c
+#PRODUCT: sprucetk
+#EXP_DATE: 2021 05 20
+#FEATURES: python;java;clr
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: 0a04cbce1456e1dd86ae60dbcf73cdee90408b0def9305fad3fd8b7924114a7e
+#PRODUCT: spruce
+#EXP_DATE: 2021 05 20
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: 29e5cef6f645459b553ae4bc8280ef6b4a7694f72fd87e3c137d765a9846d91e
+#PRODUCT: szmap
+#EXP_DATE: 2021 05 20
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: 124885a5391e4e744cc8a7ae0d34afb2cc9cbc6cc7f2074f2e027b4ff8e1f521
+#PRODUCT: szmaptk
+#EXP_DATE: 2021 05 20
+#FEATURES: python;java;clr
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: a5817a443b3501f425066dbe02cfbcd466fb3dc8915fceb25575e0b0e11e82b4
+#PRODUCT: szybki
+#EXP_DATE: 2021 05 20
+#FEATURES: python;java;clr
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: 26d7cd8bf6ee33124ef2048752b629b2cabb450fb90c2f56d76bb8842415e00d
+#PRODUCT: case
+#EXP_DATE: 2021 05 20
+#FEATURES: python;java;clr
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: ac102f77ad8448769e926ed7e8e33cec7442d56ca506387f8ce783814f23a2e1
+#PRODUCT: vida
+#EXP_DATE: 2021 05 20
+#FEATURES: script line
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: 356d8301ccc9f95390f9b96ee6ea62f03389dad17e49acb8fdcb1d03fb344a25
+#PRODUCT: zap
+#EXP_DATE: 2021 05 20
+#FEATURES: basic toolkit;protein pka;perfect charge;python;java;clr
+#LICENSEE: The Laboratory of David Mobley
+#SITE: University of California, Irvine
+LICENSE_KEY: ed1ebf07038c7c0b7abbea32068d183483c05916b146cb012ea1b62e993b34bf
+
